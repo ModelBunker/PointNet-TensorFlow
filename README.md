@@ -5,22 +5,16 @@ TensorFlow implementation of the paper [PointNet: Deep Learning on Point Sets fo
 
 The file **todo.sh** contains all build instructions, so either run it with ./todo.sh or copy paste the following into your shell.
 ```
-docker build -t voxelnet .
-
-docker volume create --opt type=none \
-                     --opt o=bind \
-                     --opt device=. \
-                     vxlnt-vol
+docker build -t pointnet .
 
 docker run --gpus all -it \
            -p 5001:6006 \
-           --name voxelnet_cnt \
-           -v vxlnt-vol:/home/PyTorch-YOLOv3/:rw \
-           voxelnet
+           --name pointnet_cnt \
+           pointnet
 
-cd VoxelNet-pytorch
+cd PointNet-TensorFlow
 
-python demo.py
+python train.py
 ```
 
 
