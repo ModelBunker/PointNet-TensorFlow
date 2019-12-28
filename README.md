@@ -1,3 +1,23 @@
+
+# PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation - TensorFlow
+
+TensorFlow implementation of the paper [PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation](https://arxiv.org/abs/1612.00593) based on previous work in [this repo](https://github.com/charlesq34/pointnet).
+
+The file **todo.sh** contains all build instructions, so either run it with ./todo.sh or copy paste the following into your shell.
+```
+docker build -t pointnet .
+
+docker run --gpus all -it \
+           -p 5001:6006 \
+           --name pointnet_cnt \
+           pointnet
+
+cd PointNet-TensorFlow
+
+python train.py
+```
+
+
 ## PointNet: *Deep Learning on Point Sets for 3D Classification and Segmentation*
 Created by <a href="http://charlesrqi.com" target="_blank">Charles R. Qi</a>, <a href="http://ai.stanford.edu/~haosu/" target="_blank">Hao Su</a>, <a href="http://cs.stanford.edu/~kaichun/" target="_blank">Kaichun Mo</a>, <a href="http://geometry.stanford.edu/member/guibas/" target="_blank">Leonidas J. Guibas</a> from Stanford University.
 
