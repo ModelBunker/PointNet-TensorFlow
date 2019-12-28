@@ -21,6 +21,7 @@ parser.add_argument('--model', default='pointnet_cls', help='Model name: pointne
 parser.add_argument('--batch_size', type=int, default=4, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
+parser.add_argument('--succ_dir', default='succ', help='success folder path [succ]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
 FLAGS = parser.parse_args()
@@ -31,6 +32,7 @@ NUM_POINT = FLAGS.num_point
 MODEL_PATH = FLAGS.model_path
 GPU_INDEX = FLAGS.gpu
 MODEL = importlib.import_module(FLAGS.model) # import network module
+SUCC_DIR = FLAGS.succ_dir
 DUMP_DIR = FLAGS.dump_dir
 if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
@@ -153,7 +155,13 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
                     output_img = pc_util.point_cloud_three_views(np.squeeze(current_data[i, :, :]))
                     scipy.misc.imsave(img_filename, output_img)
                     error_cnt += 1
-                
+                if pred_val[i-start_idx] == l and FLAGS.visu: # ERROR CASE, DUMP!
+                    img_filename = '%d_label_%s_pred_%s.jpg' % (total_correct, SHAPE_NAMES[l],
+                                                           SHAPE_NAMES[pred_val[i-start_idx]])
+                    img_filename = os.path.join(SUCC_DIR, img_filename)
+                    output_img = pc_util.point_cloud_three_views(np.squeeze(current_data[i, :, :]))
+                    scipy.misc.imsave(img_filename, output_img)
+
     log_string('eval mean loss: %f' % (loss_sum / float(total_seen)))
     log_string('eval accuracy: %f' % (total_correct / float(total_seen)))
     log_string('eval avg class acc: %f' % (np.mean(np.array(total_correct_class)/np.array(total_seen_class,dtype=np.float))))
